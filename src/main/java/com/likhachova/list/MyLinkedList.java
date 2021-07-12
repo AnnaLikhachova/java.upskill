@@ -23,6 +23,36 @@ public class MyLinkedList implements CustomList {
         }
     }
 
+    public CustomIterator iterator(){
+         CustomIterator ci = new CustomIterator() {
+             private Node current = first;
+             private int nodePointer = -1;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Object next() {
+                if(current != null){
+                    Node newNode = current;
+                    current = current.next;
+                    nodePointer++;
+                    return newNode.item;
+                }
+                return null;
+            }
+
+            @Override
+            public void remove() {
+                MyLinkedList.this.remove(nodePointer);
+            }
+
+        };
+         return ci;
+    }
+
     @Override
     public void add(Object value) {
         Node lastNode = last;

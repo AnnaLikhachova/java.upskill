@@ -13,6 +13,7 @@ public class MyArrayList implements CustomList {
     private static final double RESIZE_INDEX = 1.5;
     private Object[] array;
     private int size = 0;
+    private int nextElement = 0;
 
     MyArrayList() {
         this.array = new Object[INITIAL_CAPACITY];
@@ -20,6 +21,33 @@ public class MyArrayList implements CustomList {
 
     MyArrayList(int requiredCapacity) {
         this.array = new Object[requiredCapacity];
+    }
+
+    public CustomIterator iterator(){
+        CustomIterator ci = new CustomIterator() {
+
+            @Override
+            public boolean hasNext() {
+                return nextElement < size;
+            }
+
+            @Override
+            public Object next() {
+                Object result = array[nextElement];
+                nextElement = nextElement + 1;
+                return result;
+            }
+
+            @Override
+            public void remove() {
+                if (nextElement < size - 1) {
+                    System.arraycopy(array, nextElement + 1,
+                            array, nextElement, size - nextElement - 1);
+                }
+                size--;
+            }
+        };
+        return ci;
     }
 
     @Override

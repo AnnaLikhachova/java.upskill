@@ -44,4 +44,6 @@ public interface CustomList {
         // [A, B, C]
         String toString();
 
+        CustomIterator iterator();
+
 }

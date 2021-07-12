@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -172,6 +173,46 @@ public abstract class AbstractListTest {
         list.add("C");
 
         assertEquals("[A, B, C]", list.toString());
+    }
+
+    @Test
+    public void whenIterateToNextElement_thenNextElementIsReturned(){
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        CustomIterator customIterator = list.iterator();
+        Object o = customIterator.next();
+        Object o1 = customIterator.next();
+        Object o2 = customIterator.next();
+
+
+        assertEquals("A", o);
+        assertEquals("B", o1);
+        assertEquals("C", o2);
+    }
+
+    @Test
+    public void whenAddNextElement_thenNextElementIsPresent(){
+        list.add("A");
+
+        CustomIterator customIterator = list.iterator();
+
+        assertTrue(customIterator.hasNext());
+    }
+
+    @Test
+    public void whenRemoveElement_thenElementIsRemoved(){
+        list.add("A");
+        list.add("B");
+
+        CustomIterator customIterator = list.iterator();
+        Object o = customIterator.next();
+        customIterator.remove();
+        Object o1 = customIterator.next();
+
+        assertEquals("B", o1);
+        assertFalse(customIterator.hasNext());
     }
 
 }
