@@ -1,32 +1,40 @@
 package com.likhachova.list;
 
+import java.util.Iterator;
+import java.util.StringJoiner;
+
 /**
- * @author Anna Likhachova<br/>
- *         Creation date: 11/07/21.
- * @since 1.0
+ * @author Anna Likhachova
+ * Creation date: 11/07/21.
+ * @since 2.0
  */
-public class MyLinkedList implements CustomList {
+public class MyLinkedList<E> implements CustomList, Iterable<E> {
 
     private int size = 0;
-    private Node first;
-    private Node last;
+    private Node<E> first;
+    private Node<E> last;
 
-    private static class Node {
-        Object item;
-        Node prev;
-        Node next;
+    private static class Node<E> {
+        E item;
+        Node<E> prev;
+        Node<E> next;
 
-        Node(Object item, Node prev, Node next) {
+        Node(E item) {
+            this.item = item;
+        }
+
+        Node(E item, Node<E> prev, Node<E> next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
         }
     }
 
-    public CustomIterator iterator(){
-         CustomIterator ci = new CustomIterator() {
-             private Node current = first;
-             private int nodePointer = -1;
+    @Override
+    public Iterator<E> iterator() {
+        Iterator<E> it = new Iterator<E>() {
+            private int nodePointer = -1;
+            private Node<E> current = first;
 
             @Override
             public boolean hasNext() {
@@ -34,9 +42,9 @@ public class MyLinkedList implements CustomList {
             }
 
             @Override
-            public Object next() {
-                if(current != null){
-                    Node newNode = current;
+            public E next() {
+                if(current != null) {
+                    Node<E> newNode = current;
                     current = current.next;
                     nodePointer++;
                     return newNode.item;
@@ -46,51 +54,52 @@ public class MyLinkedList implements CustomList {
 
             @Override
             public void remove() {
-                MyLinkedList.this.remove(nodePointer);
+                checkIndex(nodePointer);
+                Node indexNode = getNode(nodePointer);
+                indexNode.prev = indexNode.next;
+                indexNode.next = indexNode.prev;
+                indexNode.item = null;
+                //throw new UnsupportedOperationException();
             }
-
         };
-         return ci;
+        return it;
     }
 
     @Override
     public void add(Object value) {
-        Node lastNode = last;
-        Node newNode = new Node(value, lastNode, null);
-        last = newNode;
-        if(lastNode == null) {
-            first = newNode;
-        }
-        else {
-            lastNode.next = newNode;
-        }
-        size++;
+        add(value, size);
     }
 
     @Override
     public void add(Object value, int index) {
         checkIndex(index);
-        if(index == size) {
-            add(value);
+        Node<E> newNode = new Node(value);
+        // add to the beginning
+        if(index == 0) {
+            first = newNode;
+            last = newNode;
+            //add to the end
+        }
+        else if(index == size) {
+            newNode.prev = last;
+            last.next = newNode;
+            last = newNode;
         }
         else {
-            Node indexNode = getNode(index);
-            Node prevNode = indexNode.prev;
-            Node newNode = new Node(value, prevNode, indexNode);
-            indexNode.prev = newNode;
-            prevNode.next = newNode;
-
-            size++;
+            Node<E> indexNode = getNode(index - 1); // add to the middle
+            newNode.prev = indexNode;
+            indexNode.next = newNode;
         }
+        size++;
     }
 
     @Override
     public void remove(int index) {
         checkIndex(index);
-        if(index == size) throw new IndexOutOfBoundsException("IndexOutOfBoundsException is thrown in remove method");
-        Node indexNode = getNode(index);
-        Node next = indexNode.next;
-        Node prev = indexNode.prev;
+        checkSize(index);
+        Node<E> indexNode = getNode(index);
+        Node<E> next = indexNode.next;
+        Node<E> prev = indexNode.prev;
 
         if(prev == null) {
             first = next;
@@ -112,9 +121,9 @@ public class MyLinkedList implements CustomList {
     }
 
     @Override
-    public Object get(int index) {
+    public E get(int index) {
         checkIndex(index);
-        if(index == size) throw new IndexOutOfBoundsException("IndexOutOfBoundsException is thrown in get method");
+        checkSize(index);
         return getNode(index).item;
     }
 
@@ -184,13 +193,11 @@ public class MyLinkedList implements CustomList {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
+        StringJoiner rgbJoiner = new StringJoiner(", ", "[", "]");
         for(Node node = first; node != null; node = node.next) {
-            sb.append(node.item + ", ");
+            rgbJoiner.add(node.item.toString());
         }
-        sb.delete(sb.length() - 2, sb.length());
-        return sb.append(']').toString();
+        return rgbJoiner.toString();
     }
 
     private void checkIndex(int index) {
@@ -202,16 +209,23 @@ public class MyLinkedList implements CustomList {
         return index >= 0 && index <= size;
     }
 
-    private Node getNode(int index) {
+    private void checkSize(int index) {
+        if(index == size) {
+            throw new IndexOutOfBoundsException("IndexOutOfBoundsException");
+        }
+    }
+
+    private Node<E> getNode(int index) {
+
         if(index < (size / 2)) {
-            Node firstNode = first;
+            Node<E> firstNode = first;
             for(int i = 0; i < index; i++) {
                 firstNode = firstNode.next;
             }
             return firstNode;
         }
         else {
-            Node lastNode = last;
+            Node<E> lastNode = last;
             for(int i = size - 1; i > index; i--) {
                 lastNode = lastNode.prev;
             }

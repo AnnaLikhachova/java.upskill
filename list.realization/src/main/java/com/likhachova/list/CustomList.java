@@ -1,14 +1,16 @@
 package com.likhachova.list;
 
-public interface CustomList {
+import java.util.Iterator;
+
+public interface CustomList<E> {
         // add value to the end of the list
-        void add(Object value);
+        void add(E value);
 
         // [A, B, C, null, null ] size = 3
         // add (D, [0,1,2,3])
         // we can add value by index between [0, size]
         // otherwise throw new IndexOutOfBoundsException
-        void add(Object value, int index);
+        void add(E value, int index);
 
         // we can remove value by index between [0, size - 1]
         // otherwise throw new IndexOutOfBoundsException
@@ -20,11 +22,11 @@ public interface CustomList {
         // [A, B, C] size = 3
         // we can get value by index between [0, size - 1]
         // otherwise throw new IndexOutOfBoundsException
-        Object get(int index);
+        E get(int index);
 
         // we can set value by index between [0, size - 1]
         // otherwise throw new IndexOutOfBoundsException
-        void set(Object value, int index);
+        void set(E value, int index);
 
         void clear();
 
@@ -32,7 +34,7 @@ public interface CustomList {
 
         boolean isEmpty();
 
-        boolean contains(Object value);
+        boolean contains(E value);
 
         // [A, B, A, C] indexOf(A) -> 0
         // -1 if not exist
@@ -44,6 +46,6 @@ public interface CustomList {
         // [A, B, C]
         String toString();
 
-        CustomIterator iterator();
+        Iterator<E> iterator();
 
 }

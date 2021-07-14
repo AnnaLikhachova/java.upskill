@@ -1,13 +1,15 @@
 package com.likhachova.list;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
- * @author Anna Likhachova<br/>
- *         Creation date: 11/07/21.
- * @since 1.0
+ * @author Anna Likhachova
+ * Creation date: 11/07/21.
+ * @since 2.0
  */
-public class MyArrayList implements CustomList {
+public class MyArrayList<E> implements CustomList, Iterable<E> {
 
     private static final int INITIAL_CAPACITY = 16;
     private static final double RESIZE_INDEX = 1.5;
@@ -23,8 +25,9 @@ public class MyArrayList implements CustomList {
         this.array = new Object[requiredCapacity];
     }
 
-    public CustomIterator iterator(){
-        CustomIterator ci = new CustomIterator() {
+    @Override
+    public Iterator<E> iterator() {
+        Iterator<E> it = new Iterator<E>() {
 
             @Override
             public boolean hasNext() {
@@ -32,22 +35,23 @@ public class MyArrayList implements CustomList {
             }
 
             @Override
-            public Object next() {
+            public E next() {
                 Object result = array[nextElement];
                 nextElement = nextElement + 1;
-                return result;
+                return (E) result;
             }
 
             @Override
             public void remove() {
-                if (nextElement < size - 1) {
+                if(nextElement < size - 1) {
                     System.arraycopy(array, nextElement + 1,
                             array, nextElement, size - nextElement - 1);
                 }
                 size--;
+                // throw new UnsupportedOperationException();
             }
         };
-        return ci;
+        return it;
     }
 
     @Override
@@ -62,8 +66,12 @@ public class MyArrayList implements CustomList {
 
     @Override
     public boolean contains(Object o) {
-        for(Object anArray : array) {
-            if(Objects.equals(anArray, o)) return true;
+        if(o != null) {
+            for(Object anArray : array) {
+                if(Objects.equals(anArray, o)) {
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -92,11 +100,10 @@ public class MyArrayList implements CustomList {
     }
 
     @Override
-    public Object get(int index) {
+    public E get(int index) {
         checkIndex(index);
-        if(index >= size)
-            throw new ArrayIndexOutOfBoundsException("ArrayIndexOutOfBoundsException is thrown in get method");
-        return array[index];
+        checkSize(index);
+        return (E) array[index];
     }
 
     @Override
@@ -108,8 +115,7 @@ public class MyArrayList implements CustomList {
     @Override
     public void remove(int index) {
         checkIndex(index);
-        if(index >= size)
-            throw new ArrayIndexOutOfBoundsException("ArrayIndexOutOfBoundsException is thrown in remove method");
+        checkSize(index);
         for(int i = 0; i < size; i++) {
             if(i == index) {
                 System.arraycopy(array, index + 1, array, index, size - index - 1);
@@ -140,13 +146,11 @@ public class MyArrayList implements CustomList {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        for(Object o : array) {
-            sb.append(o == null? "": o + ", ");
+        StringJoiner rgbJoiner = new StringJoiner(", ", "[", "]");
+        for(int i = 0; i < size; i++) {
+            rgbJoiner.add(array[i] == null? "": array[i].toString());
         }
-        sb.delete(sb.length() - 2, sb.length());
-        return sb.append(']').toString();
+        return rgbJoiner.toString();
     }
 
     private void insureCapacity() {
@@ -158,9 +162,14 @@ public class MyArrayList implements CustomList {
     }
 
     private void checkIndex(int index) {
-        if(index < 0 || index > array.length - 1)
-            throw new ArrayIndexOutOfBoundsException("ArrayIndexOutOfBoundsException is thrown in checkIndex method");
-
+        if(index < 0 || index > array.length - 1) {
+            throw new ArrayIndexOutOfBoundsException("ArrayIndexOutOfBoundsException index: " + index);
+        }
     }
 
+    private void checkSize(int index) {
+        if(index >= size) {
+            throw new ArrayIndexOutOfBoundsException("ArrayIndexOutOfBoundsException index: " + index);
+        }
+    }
 }
