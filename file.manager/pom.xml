@@ -11,5 +11,7 @@
 
     <artifactId>file.manager</artifactId>
 
-
+    <build>
+        <finalName>fileanalyzer</finalName>
+    </build>
 </project>

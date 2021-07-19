@@ -4,33 +4,62 @@ import java.util.*;
 
 public class MyHashMap<K,V> implements Map<K,V>{
     private static final int INITIAL_CAPACITY = 16;
-    private ArrayList<MyEntry>[] buckets;
-    private int nextBucket = 0;
-    private int nextEntry = 0;
+    private ArrayList<MyEntry<K,V>>[] buckets;
 
     MyHashMap() {
         this.buckets = new ArrayList[INITIAL_CAPACITY];
-        for(ArrayList<MyEntry> array : buckets){
-            array = new ArrayList<>();
-        }
     }
 
     @Override
-    public Object put(Object key, Object value) {
-        if(buckets[getIndex(key)] == null){
-            ArrayList<MyEntry> entryArrayList = new ArrayList<>();
-            buckets[getIndex(key)] = entryArrayList;
-            entryArrayList.add(new MyEntry(key,value) );
-        } else {
-            buckets[getIndex(key)].add(new MyEntry(key,value));
+    public V put(K key, V value) {
+        if(key == null) {
+            if(buckets[0] == null) {
+                ArrayList<MyEntry<K, V>> entryArrayList = new ArrayList<>();
+                buckets[0] = entryArrayList;
+                buckets[0].add(new MyEntry<>(key, value));
+            }
+            else {
+                ArrayList<MyEntry<K, V>> entryArrayList = buckets[0];
+                for(MyEntry<K, V> myEntry : entryArrayList) {
+                    if(myEntry.getKey() == null) {
+                        if(!myEntry.getValue().equals(value)) {
+                            myEntry.setValue(value);
+                        }
+                    }
+                    else {
+                        buckets[0].add(new MyEntry<>(key, value));
+                    }
+                }
+            }
+        }
+        else {
+            if(buckets[getIndex(key)] == null) {
+                ArrayList<MyEntry<K, V>> entryArrayList = new ArrayList<>();
+                buckets[getIndex(key)] = entryArrayList;
+                entryArrayList.add(new MyEntry<>(key, value));
+            }
+            else {
+                ArrayList<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
+                for(MyEntry<K, V> myEntry : entryArrayList) {
+                    if(myEntry.getKey().equals(key)) {
+                        if(!myEntry.getValue().equals(value)) {
+                            myEntry.setValue(value);
+                        }
+                    }
+                    else {
+                        buckets[getIndex(key)].add(new MyEntry<>(key, value));
+                    }
+                }
+
+            }
         }
         return value;
     }
 
     @Override
-    public Object get(Object key) {
-        ArrayList<MyEntry> entryArrayList = buckets[getIndex(key)];
-        for(MyEntry myEntry: entryArrayList){
+    public V get(K key) {
+        ArrayList<MyEntry<K,V>> entryArrayList = buckets[getIndex(key)];
+        for(MyEntry<K,V> myEntry: entryArrayList){
             if(myEntry.getKey().equals(key)){
                 return myEntry.getValue();
             }
@@ -39,7 +68,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(K key) {
         for(java.util.Map.Entry entry : buckets[getIndex(key)]){
             if(entry.getKey().equals(key)){
                 return true;
@@ -49,22 +78,16 @@ public class MyHashMap<K,V> implements Map<K,V>{
     }
 
     @Override
-    public Object remove(Object key) {
-        ArrayList<MyEntry> entryArrayList = buckets[getIndex(key)];
-        Iterator<MyEntry> iterator = entryArrayList.iterator();
-        while(iterator.hasNext()){
-            MyEntry nextEntry = iterator.next();
-            if(nextEntry.getKey().equals(key)){
-                iterator.remove();
-            }
-        }
+    public V remove(K key) {
+        ArrayList<MyEntry<K,V>> entryArrayList = buckets[getIndex(key)];
+        entryArrayList.removeIf(nextEntry -> nextEntry.getKey().equals(key));
         return null;
     }
 
     @Override
     public int size() {
         int size = 0;
-        for(ArrayList<MyEntry> bucket : buckets){
+        for(ArrayList<MyEntry<K,V>> bucket : buckets){
             if(bucket != null) {
                 size += bucket.size();
             }
@@ -76,17 +99,18 @@ public class MyHashMap<K,V> implements Map<K,V>{
     public Iterator<MyEntry<K, V>> iterator() {
 
         Iterator<MyEntry<K, V>> it = new Iterator<MyEntry<K, V>>() {
-
+            private int nextBucket = 0;
+            private int nextEntry = 0;
             @Override
             public boolean hasNext() {
                 return nextEntry < size();
             }
 
             @Override
-            public MyEntry next() {
-                ArrayList<MyEntry> nextBucketArray = buckets[nextBucket];
+            public MyEntry<K,V> next() {
+                ArrayList<MyEntry<K,V>> nextBucketArray = buckets[nextBucket];
                 if(nextBucketArray != null) {
-                    MyEntry result = nextBucketArray.get(nextEntry);
+                    MyEntry<K,V> result = nextBucketArray.get(nextEntry);
                     nextEntry++;
                     if(nextBucketArray.size() == nextEntry) {
                         nextEntry = 0;
@@ -104,7 +128,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
             @Override
             public void remove() {
-                ArrayList<MyEntry> nextBucketArray = buckets[nextBucket-1];
+                ArrayList<MyEntry<K,V>> nextBucketArray = buckets[nextBucket-1];
                 nextBucketArray.remove(nextEntry);
 
             }
