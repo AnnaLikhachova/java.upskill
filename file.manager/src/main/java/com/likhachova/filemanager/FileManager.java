@@ -1,14 +1,6 @@
 package com.likhachova.filemanager;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.util.ResourceUtils;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 
 public class FileManager {
 
@@ -58,36 +50,42 @@ public class FileManager {
         return count;
     }
 
-    public static void copy(String from, String to) throws FileNotFoundException {
-        File source = ResourceUtils.getFile(from);
-        File dest = ResourceUtils.getFile(to);
-        try {
-            FileUtils.copyDirectory(source, dest);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        if(dest.exists()) {
-            System.out.println("File copied successfully.");
-        }
-        else {
-            System.out.println("File copy failed.");
+    private static void recursiveCopy(File from, File to) {
+        if(from.isDirectory()) {
+            if(!to.exists()) {
+                to.mkdir();
+            }
+            String[] children = from.list();
+            for(int i = 0; i < children.length; i++) {
+                recursiveCopy(new File(from, children[i]), new File(to, children[i]));
+            }
+        } else {
+
+            try(
+                    InputStream in = new FileInputStream(from);
+                    OutputStream out = new FileOutputStream(to);
+            ) {
+                byte[] buf = new byte[1024];
+                int len;
+                while((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } catch(IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+    public static void copy(String from, String to) {
+        File fileToCopy = new File(from);
+        File fileCopied = new File(to);
+        recursiveCopy(fileToCopy,fileCopied);
+    }
+
     public static void move(String from, String to) {
-        Path result = null;
-        try {
-            result = Files.move(Paths.get(from), Paths.get(to));
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        if(result != null) {
-            System.out.println("File moved successfully.");
-        }
-        else {
-            System.out.println("File movement failed.");
-        }
+        File fileToCopy = new File(from);
+        File fileCopied = new File(to);
+        recursiveCopy(fileToCopy,fileCopied);
+        fileToCopy.delete();
     }
 }

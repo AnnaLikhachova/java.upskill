@@ -1,9 +1,8 @@
 package com.likhachova.filemanager;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,27 +15,14 @@ public class FileAnalyzer {
 
     public void createFileAnalyzer(String filePath, String wordToFind) {
         buildRegex(wordToFind);
-        String line = null;
         if(filePath != null && wordToFind != null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            try {
-                FileReader fileReader =
-                        new FileReader(filePath);
-
-                BufferedReader bufferedReader =
-                        new BufferedReader(fileReader);
-
-                while((line = bufferedReader.readLine()) != null) {
-
-                    stringBuilder.append(line);
-                }
-                bufferedReader.close();
-                countMatches(stringBuilder.toString(), WORD_REGEX);
-                if(wordCount > 0) {
-                    System.out.println("The word " + wordToFind + " is present in text. The quantity is: " + wordCount);
-                }
-                String[] text = stringBuilder.toString().split(SENTENCE_REGEX);
-                printSentence(text, WORD_REGEX);
+            File file = new File(filePath);
+            Charset charset = StandardCharsets.UTF_8;
+            String content = null;
+            try(InputStream in = new FileInputStream(file)) {
+                byte[] bytes = new byte[(int) file.length()];
+                in.read(bytes);
+                content = new String(bytes, charset);
             }
             catch(FileNotFoundException ex) {
                 System.out.println(
@@ -48,8 +34,13 @@ public class FileAnalyzer {
                         "Error reading file '"
                                 + filePath + "'");
             }
-        }
-        else {
+            countMatches(content, WORD_REGEX);
+            if(wordCount > 0) {
+                System.out.println("The word " + wordToFind + " is present in text. The quantity is: " + wordCount);
+            }
+            String[] text = content.split(SENTENCE_REGEX);
+            printSentence(text, WORD_REGEX);
+        } else {
             System.out.println("One or all arguments are null");
         }
     }

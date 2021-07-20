@@ -2,11 +2,11 @@ package com.likhachova.map;
 
 import java.util.*;
 
-public class MyHashMap<K,V> implements Map<K,V>{
+public class MyHashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 16;
     private static final double LOAD_FACTOR = 0.75;
     private static final int RESIZE_INDEX = 2;
-    private ArrayList<MyEntry<K,V>>[] buckets;
+    private ArrayList<MyEntry<K, V>>[] buckets;
 
     MyHashMap() {
         this.buckets = new ArrayList[INITIAL_CAPACITY];
@@ -18,8 +18,8 @@ public class MyHashMap<K,V> implements Map<K,V>{
         if(key == null) {
             if(buckets[0] == null) {
                 ArrayList<MyEntry<K, V>> entryArrayList = new ArrayList<>();
+                entryArrayList.add(new MyEntry<>(key, value));
                 buckets[0] = entryArrayList;
-                buckets[0].add(new MyEntry<>(key, value));
             }
             else {
                 ArrayList<MyEntry<K, V>> entryArrayList = buckets[0];
@@ -61,9 +61,9 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
     @Override
     public V get(K key) {
-        ArrayList<MyEntry<K,V>> entryArrayList = buckets[getIndex(key)];
-        for(MyEntry<K,V> myEntry: entryArrayList){
-            if(myEntry.getKey().equals(key)){
+        ArrayList<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
+        for(MyEntry<K, V> myEntry : entryArrayList) {
+            if(myEntry.getKey().equals(key)) {
                 return myEntry.getValue();
             }
         }
@@ -72,8 +72,8 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
     @Override
     public boolean containsKey(K key) {
-        for(java.util.Map.Entry entry : buckets[getIndex(key)]){
-            if(entry.getKey().equals(key)){
+        for(java.util.Map.Entry entry : buckets[getIndex(key)]) {
+            if(entry.getKey().equals(key)) {
                 return true;
             }
         }
@@ -82,7 +82,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
     @Override
     public V remove(K key) {
-        ArrayList<MyEntry<K,V>> entryArrayList = buckets[getIndex(key)];
+        ArrayList<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
         entryArrayList.removeIf(nextEntry -> nextEntry.getKey().equals(key));
         return null;
     }
@@ -90,7 +90,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
     @Override
     public int size() {
         int size = 0;
-        for(ArrayList<MyEntry<K,V>> bucket : buckets){
+        for(ArrayList<MyEntry<K, V>> bucket : buckets) {
             if(bucket != null) {
                 size += bucket.size();
             }
@@ -104,24 +104,26 @@ public class MyHashMap<K,V> implements Map<K,V>{
         Iterator<MyEntry<K, V>> it = new Iterator<MyEntry<K, V>>() {
             private int nextBucket = 0;
             private int nextEntry = 0;
+
             @Override
             public boolean hasNext() {
                 return nextEntry < size();
             }
 
             @Override
-            public MyEntry<K,V> next() {
-                ArrayList<MyEntry<K,V>> nextBucketArray = buckets[nextBucket];
+            public MyEntry<K, V> next() {
+                ArrayList<MyEntry<K, V>> nextBucketArray = buckets[nextBucket];
                 if(nextBucketArray != null) {
-                    MyEntry<K,V> result = nextBucketArray.get(nextEntry);
+                    MyEntry<K, V> result = nextBucketArray.get(nextEntry);
                     nextEntry++;
                     if(nextBucketArray.size() == nextEntry) {
                         nextEntry = 0;
                         nextBucket++;
                     }
                     return result;
-                } else {
-                    if(nextBucket != buckets.length - 1){
+                }
+                else {
+                    if(nextBucket != buckets.length - 1) {
                         nextBucket++;
                         next();
                     }
@@ -131,7 +133,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
             @Override
             public void remove() {
-                ArrayList<MyEntry<K,V>> nextBucketArray = buckets[nextBucket-1];
+                ArrayList<MyEntry<K, V>> nextBucketArray = buckets[nextBucket - 1];
                 nextBucketArray.remove(nextEntry);
 
             }
@@ -166,21 +168,32 @@ public class MyHashMap<K,V> implements Map<K,V>{
         }
     }
 
-    private int getIndex(Object o){
+    private int getIndex(Object o) {
         return o.hashCode() % buckets.length;
     }
 
-    private boolean isLoadFactor() {
+    private void isLoadFactor() {
         if(buckets.length * LOAD_FACTOR <= size()) {
             resize();
-            return true;
         }
-        return false;
     }
 
     private void resize() {
         ArrayList<MyEntry<K, V>>[] arrayNew = new ArrayList[(buckets.length * RESIZE_INDEX)];
-        System.arraycopy(buckets, 0, arrayNew, buckets.length - 1, buckets.length);
+        for(List<MyEntry<K, V>> array : buckets) {
+            if(array != null) {
+                for(MyEntry<K, V> entry : array) {
+                    if(arrayNew[getIndex(entry.getKey())] != null) {
+                        arrayNew[getIndex(entry.getKey())].add(entry);
+                    }
+                    else {
+                        ArrayList<MyEntry<K, V>> newEntryArray = new ArrayList();
+                        newEntryArray.add(entry);
+                        arrayNew[getIndex(entry.getKey())] = newEntryArray;
+                    }
+                }
+            }
+        }
         buckets = arrayNew;
     }
 
