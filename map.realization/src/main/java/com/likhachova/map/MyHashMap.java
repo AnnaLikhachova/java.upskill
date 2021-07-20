@@ -4,6 +4,8 @@ import java.util.*;
 
 public class MyHashMap<K,V> implements Map<K,V>{
     private static final int INITIAL_CAPACITY = 16;
+    private static final double LOAD_FACTOR = 0.75;
+    private static final int RESIZE_INDEX = 2;
     private ArrayList<MyEntry<K,V>>[] buckets;
 
     MyHashMap() {
@@ -12,6 +14,7 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
     @Override
     public V put(K key, V value) {
+        isLoadFactor();
         if(key == null) {
             if(buckets[0] == null) {
                 ArrayList<MyEntry<K, V>> entryArrayList = new ArrayList<>();
@@ -165,6 +168,20 @@ public class MyHashMap<K,V> implements Map<K,V>{
 
     private int getIndex(Object o){
         return o.hashCode() % buckets.length;
+    }
+
+    private boolean isLoadFactor() {
+        if(buckets.length * LOAD_FACTOR <= size()) {
+            resize();
+            return true;
+        }
+        return false;
+    }
+
+    private void resize() {
+        ArrayList<MyEntry<K, V>>[] arrayNew = new ArrayList[(buckets.length * RESIZE_INDEX)];
+        System.arraycopy(buckets, 0, arrayNew, buckets.length - 1, buckets.length);
+        buckets = arrayNew;
     }
 
 }
