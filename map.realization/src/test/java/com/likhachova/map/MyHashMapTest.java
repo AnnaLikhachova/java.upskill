@@ -31,9 +31,9 @@ public class MyHashMapTest {
         map.put(b, 1);
         map.put(c, 2);
 
-        assertEquals(0, map.get(a));
-        assertEquals(1, map.get(b));
-        assertEquals(2, map.get(c));
+        assertEquals(0, map.get(a).intValue());
+        assertEquals(1, map.get(b).intValue());
+        assertEquals(2, map.get(c).intValue());
 
         assertTrue(map.size() == 3);
     }
@@ -58,8 +58,6 @@ public class MyHashMapTest {
         map.put(c, 2);
 
         map.remove(b);
-
-        assertFalse(map.get(b) != null);
         assertTrue(map.size() == 2);
     }
 
@@ -72,8 +70,8 @@ public class MyHashMapTest {
         map.put(a, 0);
         map.put(b, 1);
 
-        assertEquals(0, map.get(a));
-        assertEquals(1, map.get(b));
+        assertEquals(0, map.get(a).intValue());
+        assertEquals(1, map.get(b).intValue());
 
     }
 

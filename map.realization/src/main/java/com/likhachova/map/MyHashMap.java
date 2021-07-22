@@ -67,7 +67,7 @@ public class MyHashMap<K, V> implements Map<K, V> {
                 return myEntry.getValue();
             }
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
     @Override
@@ -82,7 +82,8 @@ public class MyHashMap<K, V> implements Map<K, V> {
 
     @Override
     public V remove(K key) {
-        ArrayList<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
+        ArrayList<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)]; //refactor not null check
+
         entryArrayList.removeIf(nextEntry -> nextEntry.getKey().equals(key));
         return null;
     }
@@ -108,7 +109,7 @@ public class MyHashMap<K, V> implements Map<K, V> {
             @Override
             public boolean hasNext() {
                 return nextEntry < size();
-            }
+            } //refactor
 
             @Override
             public MyEntry<K, V> next() {
@@ -169,7 +170,7 @@ public class MyHashMap<K, V> implements Map<K, V> {
     }
 
     private int getIndex(Object o) {
-        return o.hashCode() % buckets.length;
+        return Math.abs(o.hashCode()) % buckets.length;
     }
 
     private void isLoadFactor() {
