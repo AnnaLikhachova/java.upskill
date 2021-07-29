@@ -7,11 +7,13 @@ public class FileManager {
     public static int countFiles(String path) {
         int count = 0;
         File dir = new File(path);
-        if(dir.isDirectory()) {
-            count = recursiveCountFiles(dir.listFiles(), count);
-        }
-        else {
-            count++;
+        for(File file : dir.listFiles()){
+            if(dir.isDirectory()) {
+                count = countFiles(file.getAbsolutePath());
+            }
+            else {
+                count++;
+            }
         }
         return count;
     }
@@ -43,9 +45,11 @@ public class FileManager {
     public static int countDirs(String path) {
         int count = 0;
         File dir = new File(path);
-        if(dir.isDirectory()) {
-            count++;
-            count = recursiveCountDirs(dir.listFiles(), count);
+        for(File file : dir.listFiles()){
+            if(file.isDirectory()) {
+                count++;
+                count += countDirs(file.getAbsolutePath());
+            }
         }
         return count;
     }
@@ -65,7 +69,7 @@ public class FileManager {
                     InputStream in = new FileInputStream(from);
                     OutputStream out = new FileOutputStream(to);
             ) {
-                byte[] buf = new byte[1024];
+                byte[] buf = new byte[8192];
                 int len;
                 while((len = in.read(buf)) > 0) {
                     out.write(buf, 0, len);

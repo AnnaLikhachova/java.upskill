@@ -4,26 +4,25 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
+    private static final int PORT = 3000;
 
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public void startConnection(String ip, int port) throws IOException {
-        clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public static void main(String[] args) {
+        System.out.println(sendMessageToEchoServer("Hello 2"));
     }
 
-    public String sendMessage(String message) throws IOException {
-        out.println(message);
-        String resp = in.readLine();
-        return resp;
-    }
+    protected static String sendMessageToEchoServer(String message) {
 
-    public void stopConnection() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
+        try (Socket socket = new Socket("localhost", PORT);
+             BufferedReader bufferedReader
+                     = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             BufferedWriter bufferedWriter
+                     = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));) {
+
+            bufferedWriter.write(message);
+            return bufferedReader.readLine();
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
     }
 }

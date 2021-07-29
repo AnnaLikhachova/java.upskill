@@ -1,51 +1,37 @@
 package com.likhachova.socket.reader.writer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Server.class);
-
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
-
-    public void start(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-        clientSocket = serverSocket.accept();
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String content = in.readLine();
-        if("echo".equals(content)) {
-            out.println("echo client");
-        }
-        else {
-            out.println("unrecognised content");
-        }
-        stop();
-    }
-
-    public void stop() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
-        serverSocket.close();
-    }
+    private static final int PORT = 3000;
 
     public static void main(String[] args) {
-        Server server = new Server();
+        startEchoServer();
+    }
+
+    protected static void startEchoServer() {
+        ServerSocket serverSocket;
         try {
-            server.start(3000);
+            serverSocket = new ServerSocket(PORT);
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
         }
-        catch(IOException e) {
-            LOG.debug("log start server" + e.getMessage());
-            throw new RuntimeException(e);
+
+        while (true) {
+            try (
+                    Socket socket = serverSocket.accept();
+                    BufferedReader bufferedReader
+                         = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    BufferedWriter bufferedWriter
+                         = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));) {
+
+                String line = bufferedReader.readLine();
+                bufferedWriter.write(("Echo: " + line));
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
         }
     }
 }
