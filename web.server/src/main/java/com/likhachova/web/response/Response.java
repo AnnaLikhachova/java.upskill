@@ -11,8 +11,4 @@ import lombok.Setter;
 public class Response {
     private HttpStatus httpStatus;
     private ContentReader contentReader;
-
-    public HttpMethod method(HttpMethod type){
-        return null;
-    }
 }

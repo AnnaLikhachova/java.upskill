@@ -4,7 +4,6 @@ import com.likhachova.web.http.HttpStatus;
 import com.likhachova.web.request.Request;
 import com.likhachova.web.response.Response;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
