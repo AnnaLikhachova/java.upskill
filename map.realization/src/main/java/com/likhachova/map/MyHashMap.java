@@ -1,10 +1,7 @@
 package com.likhachova.map;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
 
 public class MyHashMap<K, V> implements Map<K, V> {
     private static final int INITIAL_CAPACITY = 16;
@@ -26,29 +23,23 @@ public class MyHashMap<K, V> implements Map<K, V> {
             entryArrayList.add(new MyEntry<>(key, value));
             buckets[getIndex(key)] = entryArrayList;
             size++;
-            return value;
+            return null;
         }
         else {
             entryArrayList = buckets[getIndex(key)];
+            MyEntry<K, V> newEntry = new MyEntry<>(key, value);
             for(MyEntry<K, V> myEntry : entryArrayList) {
-                if(key == null) {
-                    if(myEntry.getKey() == null) {
-                        myEntry.setValue(value);
+                if(myEntry.equals(newEntry)) {
+                    if(myEntry.hashCode() != newEntry.hashCode()) {
+                        myEntry.setValue(newEntry.getValue());
                     }
-                }
-                else if(myEntry.getKey().equals(key)) {
-                    if(!myEntry.getValue().equals(value)) {
-                        myEntry.setValue(value);
-                    }
-                }
-                else {
-                    buckets[getIndex(key)].add(new MyEntry<>(key, value));
-                    size++;
-                    return value;
+                    return myEntry.getValue();
                 }
             }
+            buckets[getIndex(key)].add(new MyEntry<>(key, value));
+            size++;
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -56,12 +47,7 @@ public class MyHashMap<K, V> implements Map<K, V> {
         List<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
         if(entryArrayList != null) {
             for(MyEntry<K, V> myEntry : entryArrayList) {
-                if(key == null) {
-                    if(myEntry.getKey() == null) {
-                        return myEntry.getValue();
-                    }
-                }
-                else if(myEntry.getKey().equals(key)) {
+                if(Objects.equals(myEntry.getKey(), key)) {
                     return myEntry.getValue();
                 }
             }
@@ -92,18 +78,8 @@ public class MyHashMap<K, V> implements Map<K, V> {
         List<MyEntry<K, V>> entryArrayList = buckets[getIndex(key)];
         if(entryArrayList != null) {
             for(MyEntry<K, V> myEntry : entryArrayList) {
-                if(myEntry != null) {
-                    if(key == null) {
-                        if(myEntry.getKey() == null) {
-                            entryArrayList.remove(myEntry);
-                            size--;
-                            if(entryArrayList.size() == 0) {
-                                buckets[getIndex(key)] = null;
-                            }
-                            return null;
-                        }
-                    }
-                    else if(myEntry.getKey().equals(key)) {
+                if(key == null) {
+                    if(myEntry.getKey() == null) {
                         entryArrayList.remove(myEntry);
                         size--;
                         if(entryArrayList.size() == 0) {
@@ -111,6 +87,14 @@ public class MyHashMap<K, V> implements Map<K, V> {
                         }
                         return null;
                     }
+                }
+                else if(myEntry.getKey().equals(key)) {
+                    entryArrayList.remove(myEntry);
+                    size--;
+                    if(entryArrayList.size() == 0) {
+                        buckets[getIndex(key)] = null;
+                    }
+                    return null;
                 }
             }
         }
@@ -178,6 +162,9 @@ public class MyHashMap<K, V> implements Map<K, V> {
 
             @Override
             public void remove() {
+                if(currentBucketIndex == 0) {
+                    throw new IllegalStateException();
+                }
                 List<MyEntry<K, V>> nextBucketArray = buckets[currentBucketIndex - 1];
                 if(nextBucketArray != null) {
                     nextBucketArray.remove(currentEntry);
@@ -186,6 +173,9 @@ public class MyHashMap<K, V> implements Map<K, V> {
                         buckets[currentBucketIndex - 1] = null;
                         currentBucketIndex--;
                     }
+                }
+                else {
+                    throw new UnsupportedOperationException();
                 }
             }
         };
@@ -217,6 +207,19 @@ public class MyHashMap<K, V> implements Map<K, V> {
             this.value = value;
             return prev;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if(this == o) return true;
+            if(o == null || getClass() != o.getClass()) return false;
+            MyEntry<?, ?> myEntry = (MyEntry<?, ?>) o;
+            return Objects.equals(key, myEntry.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key, value);
+        }
     }
 
     private int getIndex(Object o) {
@@ -224,12 +227,10 @@ public class MyHashMap<K, V> implements Map<K, V> {
             return 0;
         }
         int objectHashCode = o.hashCode();
-        if(objectHashCode != Integer.MIN_VALUE) {
-            return Math.abs(o.hashCode()) % buckets.length;
+        if(objectHashCode == Integer.MIN_VALUE) {
+            objectHashCode++;
         }
-        else {
-            return Integer.valueOf(String.valueOf(objectHashCode).substring(1)) % buckets.length;
-        }
+        return Math.abs(objectHashCode) % buckets.length;
     }
 
     private void checkLoadFactor() {
@@ -256,5 +257,4 @@ public class MyHashMap<K, V> implements Map<K, V> {
         }
         buckets = arrayNew;
     }
-
 }

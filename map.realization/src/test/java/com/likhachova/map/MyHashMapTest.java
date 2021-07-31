@@ -7,54 +7,45 @@ import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MyHashMapTest {
 
     @Test
-    @DisplayName("The element is added by index")
-    public void whenAddNewElementByIndex_thenElementIsAdded() {
+    @DisplayName("The element is put to the map")
+    public void whenAddNewElement_thenElementIsAdded() {
         MyHashMap<String, Integer> map = new MyHashMap<>();
-        String a = "A";
-        String b = "B";
-        String c = "C";
 
-        map.put(a, 0);
-        map.put(b, 1);
-        map.put(c, 2);
+        map.put("A", 0);
+        map.put("B", 1);
+        map.put("C", 2);
 
-        assertEquals(0, map.get(a));
-        assertEquals(1, map.get(b));
-        assertEquals(2, map.get(c));
+        assertEquals(0, map.get("A"));
+        assertEquals(1, map.get("B"));
+        assertEquals(2, map.get("C"));
 
-        assertTrue(map.size() == 3);
+        assertEquals(3, map.size());
     }
 
     @Test
     @DisplayName("Map contains element that was added to the Map")
     public void whenAddElement_thenListContainsThisElement() {
         MyHashMap<String, Integer> map = new MyHashMap<>();
-        String a = "A";
-        map.put(a, 0);
-        assertEquals(true, map.containsKey(a));
+        map.put("A", 0);
+        map.put("A", 0);
+        assertTrue(map.containsKey("A"));
     }
 
     @Test
     @DisplayName("The element is removed by index")
     public void whenRemoveElementByIndex_thenElementIsRemoved() {
         MyHashMap<String, Integer> map = new MyHashMap<>();
-        String a = "A";
-        String b = "B";
-        String c = "C";
+        map.put("A", 0);
+        map.put("B", 1);
+        map.put("C", 2);
 
-        map.put(a, 0);
-        map.put(b, 1);
-        map.put(c, 2);
-
-        map.remove(b);
-        assertTrue(map.size() == 2);
+        map.remove("B");
+        assertEquals(2, map.size());
     }
 
     @Test
@@ -66,7 +57,6 @@ public class MyHashMapTest {
 
         assertEquals(0, map.get("A"));
         assertEquals(1, map.get("B"));
-
     }
 
     @Test
@@ -78,22 +68,21 @@ public class MyHashMapTest {
         map.put("C", 2);
 
         Iterator<MyHashMap.MyEntry<String, Integer>> iterator = map.iterator();
-        Object o = iterator.next();
-        Object o1 = iterator.next();
-        Object o2 = iterator.next();
+        MyHashMap.MyEntry o = iterator.next();
+        MyHashMap.MyEntry o1 = iterator.next();
+        MyHashMap.MyEntry o2 = iterator.next();
 
-        assertEquals("A", ((MyHashMap.MyEntry) o).getKey());
-        assertEquals("B", ((MyHashMap.MyEntry) o1).getKey());
-        assertEquals("C", ((MyHashMap.MyEntry) o2).getKey());
+        assertEquals("A", o.getKey());
+        assertEquals("B", o1.getKey());
+        assertEquals("C", o2.getKey());
     }
 
     @Test
     @DisplayName("Next element is present by hasNext method in iterator")
     public void whenAddNextElement_thenNextElementIsPresent() {
         MyHashMap<String, Integer> map = new MyHashMap<>();
-        String a = "A";
 
-        map.put(a, 0);
+        map.put("A", 0);
 
         Iterator<MyHashMap.MyEntry<String, Integer>> iterator = map.iterator();
 
@@ -104,19 +93,16 @@ public class MyHashMapTest {
     @DisplayName("Element is removed by iterator")
     public void whenRemoveElement_thenElementIsRemoved() {
         MyHashMap<String, Integer> map = new MyHashMap<>();
-        String a = "A";
-        String b = "B";
-
-        map.put(a, 0);
-        map.put(b, 1);
+        map.put("A", 0);
+        map.put("B", 1);
 
         Iterator<MyHashMap.MyEntry<String, Integer>> iterator = map.iterator();
-        Object o = iterator.next();
-        Object o1 = iterator.next();
+        MyHashMap.MyEntry o = iterator.next();
+        MyHashMap.MyEntry o1 = iterator.next();
         iterator.remove();
 
-        assertEquals(a, ((MyHashMap.MyEntry) o).getKey());
-        assertEquals(b, ((MyHashMap.MyEntry) o1).getKey());
+        assertEquals("A", o.getKey());
+        assertEquals("B", o1.getKey());
         assertFalse(iterator.hasNext());
     }
 
@@ -124,7 +110,7 @@ public class MyHashMapTest {
     @DisplayName("When get null element by not null key then null is returned")
     public void whenGetByNotNullKey_thenNullShouldBeReturned() {
         Map<String, String> map = new MyHashMap<>();
-        assertEquals(null, map.get("key"));
+        assertNull(map.get("key"));
     }
 
     @Test
@@ -179,7 +165,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    @DisplayName("When det then corresponding value is returned")
+    @DisplayName("When get then corresponding value is returned")
     public void whenGetByExistingKey_thenGetByKeyReturnsCorrespondingValue() {
         Map<String, String> map = new MyHashMap<>();
 
@@ -208,7 +194,7 @@ public class MyHashMapTest {
         Map<String, String> map = new MyHashMap<>();
         map.put("existing key", "value");
 
-        assertEquals(null, map.get("not existing key"));
+        assertNull(map.get("not existing key"));
     }
 
     @Test
@@ -294,14 +280,14 @@ public class MyHashMapTest {
     }
 
     @Test
-    @DisplayName("When remove one element then size is decreased")
+    @DisplayName("When remove one element then size is decreased by one")
     public void whenRemoveFirstNode_thenSizeShouldDecreaseByOne() {
         Map<String, String> map = new MyHashMap<>();
 
         String firstKey = "key1";
         String secondKey = "key2";
-        String thirdKey = "key-1";
-        String fourthKey = "key-10";
+        String thirdKey = "key3";
+        String fourthKey = "key4";
 
         String firstValue = "value1";
         String secondValue = "value2";
@@ -388,8 +374,8 @@ public class MyHashMapTest {
 
         String firstKey = "key1";
         String secondKey = "key2";
-        String thirdKey = "key-1";
-        String fourthKey = "key-10";
+        String thirdKey = "key3";
+        String fourthKey = "key4";
 
         String firstValue = "value1";
         String secondValue = "value2";
@@ -401,10 +387,10 @@ public class MyHashMapTest {
         map.put(thirdKey, thirdValue);
         map.put(fourthKey, fourthValue);
 
-        assertEquals(map.containsKey(firstKey), true);
-        assertEquals(map.containsKey(secondKey), true);
-        assertEquals(map.containsKey(thirdKey), true);
-        assertEquals(map.containsKey(fourthKey), true);
+        assertTrue(map.containsKey(firstKey));
+        assertTrue(map.containsKey(secondKey));
+        assertTrue(map.containsKey(thirdKey));
+        assertTrue(map.containsKey(fourthKey));
     }
 
     @Test
@@ -414,9 +400,9 @@ public class MyHashMapTest {
 
         String firstKey = "key1";
         String secondKey = "key2";
-        String thirdKey = "key-1";
-        String fourthKey = "key-10";
-        String notExistingKeyWithHashLeadingToSameBucket = "key+12";
+        String thirdKey = "key3";
+        String fourthKey = "key4";
+        String notExistingKey = "not existing key";
 
         String firstValue = "value1";
         String secondValue = "value2";
@@ -428,11 +414,11 @@ public class MyHashMapTest {
         map.put(thirdKey, thirdValue);
         map.put(fourthKey, fourthValue);
 
-        assertEquals(true, map.containsKey(firstKey));
-        assertEquals(true, map.containsKey(secondKey));
-        assertEquals(true, map.containsKey(thirdKey));
-        assertEquals(true, map.containsKey(fourthKey));
-        assertEquals(false, map.containsKey(notExistingKeyWithHashLeadingToSameBucket));
+        assertTrue(map.containsKey(firstKey));
+        assertTrue(map.containsKey(secondKey));
+        assertTrue(map.containsKey(thirdKey));
+        assertTrue(map.containsKey(fourthKey));
+        assertFalse(map.containsKey(notExistingKey));
     }
 
     @Test
@@ -471,10 +457,10 @@ public class MyHashMapTest {
         String keyQ = "0";
         String keyW = "key1";
         String keyE = "key2";
-        String keyR = "key-1";
-        String keyT = "key-10";
-        String keyY = "key-100";
-        String keyZ = "1000";
+        String keyR = "key3";
+        String keyT = "key4";
+        String keyY = "key5";
+        String keyZ = "key6";
 
         String keyQValue = "keyQValue";
         String keyWValue = "keyWValue";
@@ -525,7 +511,7 @@ public class MyHashMapTest {
     @DisplayName("Empty map has no next element")
     public void whenIteratorHasNext_thenShouldReturnFalse() {
         Map<String, String> map = new MyHashMap<>();
-        assertEquals(false, map.iterator().hasNext());
+        assertFalse(map.iterator().hasNext());
     }
 
     @Test
@@ -535,14 +521,14 @@ public class MyHashMapTest {
         map.put("key", "value");
 
         Iterator<MyHashMap.MyEntry<String, String>> iterator = map.iterator();
-        assertEquals(true, iterator.hasNext());
-        assertEquals(true, iterator.hasNext());
+        assertTrue(iterator.hasNext());
+        assertTrue(iterator.hasNext());
 
         map.remove("key");
-        assertEquals(false, iterator.hasNext());
+        assertFalse(iterator.hasNext());
 
         map.put("key", "value");
-        assertEquals(true, iterator.hasNext());
+        assertTrue(iterator.hasNext());
     }
 
     @Test
@@ -554,36 +540,36 @@ public class MyHashMapTest {
 
         Iterator<MyHashMap.MyEntry<String, String>> iterator = map.iterator();
 
-        assertEquals(true, iterator.hasNext());
+        assertTrue(iterator.hasNext());
         iterator.next();
-        assertEquals(true, iterator.hasNext());
+        assertTrue(iterator.hasNext());
     }
 
     @Test
-    @DisplayName("Next element is not returned by iterator")
+    @DisplayName("Next element is not present in map with one element when call method hasNext two times")
     public void whenIteratorNext_thenIteratorHasNextShouldReturnFalse() {
         Map<String, String> map = new MyHashMap<>();
         map.put("key", "value");
 
         Iterator<MyHashMap.MyEntry<String, String>> iterator = map.iterator();
 
-        assertEquals(true, iterator.hasNext());
+        assertTrue(iterator.hasNext());
         iterator.next();
-        assertEquals(false, iterator.hasNext());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
-    @DisplayName("Throw NullPointerException when remove in empty map")
-    public void whenIteratorRemove_thenArrayIndexOutOfBoundsExceptionShouldBeRaised() {
-        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+    @DisplayName("Throw IllegalStateException when remove in empty map")
+    public void whenIteratorRemove_thenIllegalStateExceptionShouldBeRaised() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
             new MyHashMap<>().iterator().remove();
         });
     }
 
     @Test
     @DisplayName("Throw IllegalStateException when remove without call method next")
-    public void whenRemoveCalledWithoutNext_thenArrayIndexOutOfBoundsExceptionShouldBeRaised() {
-        Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+    public void whenRemoveCalledWithoutNext_thenIllegalStateExceptionShouldBeRaised() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
             Map<String, String> map = new MyHashMap<>();
             map.put("key", "value");
 
@@ -606,6 +592,32 @@ public class MyHashMapTest {
         iterator.remove();
 
         assertEquals(0, map.size());
-        assertEquals(false, map.containsKey(key));
+        assertFalse(map.containsKey(key));
     }
+
+    @Test
+    @DisplayName("Map size is resized when add 17 elements")
+    public void whenAddTwentyElements_thenMapSizeIsResized() {
+        Map<String, String> map = new MyHashMap<>();
+
+        map.put("key1", "value1");
+        map.put("key2", "value1");
+        map.put("key3", "value1");
+        map.put("key4", "value1");
+        map.put("key5", "value1");
+        map.put("key6", "value1");
+        map.put("key7", "value1");
+        map.put("key8", "value1");
+        map.put("key9", "value1");
+        map.put("key10", "value1");
+        map.put("key11", "value1");
+        map.put("key12", "value1");
+        map.put("key13", "value1");
+        map.put("key14", "value1");
+        map.put("key15", "value1");
+        map.put("key16", "value1");
+        map.put("key17", "value1");
+        assertEquals(17, map.size());
+    }
+
 }
