@@ -18,7 +18,8 @@
         <module>server.socket</module>
         <module>streams.io</module>
         <module>serialization</module>
-        <module>web.server</module>
+        <module>report.generator</module>
+        <module>onlineshop</module>
     </modules>
 
     <properties>
@@ -40,12 +41,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
         </dependency>
         <!-- mockito-all -->
         <dependency>
