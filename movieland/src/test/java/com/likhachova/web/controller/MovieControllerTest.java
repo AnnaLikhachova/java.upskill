@@ -3,6 +3,7 @@ package com.likhachova.web.controller;
 import com.likhachova.model.Movie;
 import com.likhachova.service.MovieService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class MovieControllerTest {
     }
 
     @Test
+    @DisplayName("Get all movies and check fields")
     void getAll() throws Exception {
         Movie movie = Movie.builder()
                 .id(1)
