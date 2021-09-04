@@ -8,4 +8,6 @@ public interface MovieDao {
 
     List<Movie> findAll();
 
+    List<Movie> findThreeRandom(int limit);
+
 }

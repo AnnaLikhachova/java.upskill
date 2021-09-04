@@ -19,6 +19,8 @@ public class JdbcMovieDao implements MovieDao {
 
     private static final MovieRowMapper MOVIE_ROW_MAPPER = new MovieRowMapper();
     private static final String SELECT_ALL = "SELECT * FROM movie;";
+    private static final String SELECT_THREE_RANDOM = "SELECT id, name_russian, name_native, year_of_release, description, rating, price, picture_path, votes FROM movie ORDER BY RAND() limit ?;";
+
 
     public JdbcMovieDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -29,6 +31,12 @@ public class JdbcMovieDao implements MovieDao {
     public List<Movie> findAll() {
         logger.debug("Get all movies from database");
         return jdbcTemplate.query(SELECT_ALL, MOVIE_ROW_MAPPER);
+    }
+
+    @Override
+    public List<Movie> findThreeRandom(int limit) {
+        logger.debug("Find three random movies from database");
+        return jdbcTemplate.query(SELECT_THREE_RANDOM, new MovieRowMapper(), limit);
     }
 
 }

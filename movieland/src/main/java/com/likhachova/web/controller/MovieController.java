@@ -23,4 +23,10 @@ public class MovieController {
         return movieService.findAll();
     }
 
+    @GetMapping(value ="/v1/movie/random", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<Movie> findThreeRandom(){
+        logger.debug("Get three random movies from database");
+        return  movieService.findThreeRandom(3);
+    }
+
 }

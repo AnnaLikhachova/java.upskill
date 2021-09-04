@@ -16,4 +16,7 @@ public class MovieService {
         return movieDao.findAll();
     }
 
+    public Iterable<Movie> findThreeRandom(int limit) {
+        return movieDao.findThreeRandom(limit);
+    }
 }
