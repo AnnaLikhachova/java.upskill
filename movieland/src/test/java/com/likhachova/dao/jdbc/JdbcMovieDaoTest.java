@@ -29,7 +29,7 @@ public class JdbcMovieDaoTest {
     @BeforeEach
     public void before() {
         JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setUrl("jdbc:h2:~/movie;DB_CLOSE_DELAY=-1");
+        dataSource.setUrl("jdbc:h2:~/movies;DB_CLOSE_DELAY=-1");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         assertNotNull(dataSource);
