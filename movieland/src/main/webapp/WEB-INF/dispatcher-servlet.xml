@@ -18,6 +18,14 @@
         <constructor-arg ref="dataSource"/>
     </bean>
 
+    <bean id="genreService" class="com.likhachova.service.GenreService">
+        <constructor-arg ref="jdbcGenreDao"/>
+    </bean>
+
+    <bean id="jdbcGenreDao" class="com.likhachova.dao.jdbc.JdbcGenreDao">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+
     <bean id="dataSource" class="com.mysql.cj.jdbc.MysqlDataSource">
         <property name="url" value="${jdbc.url}"/>
         <property name="user" value="${jdbc.user}"/>

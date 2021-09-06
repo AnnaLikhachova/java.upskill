@@ -14,7 +14,7 @@
         <logback-version>1.2.5</logback-version>
         <mysql-version>8.0.26</mysql-version>
         <jstl-version>1.2</jstl-version>
-        <h2-version>1.4.196</h2-version>
+        <h2-version>1.4.195</h2-version>
         <jackson-databind-version>2.9.8</jackson-databind-version>
         <lombok-version>1.18.20</lombok-version>
     </properties>
@@ -40,7 +40,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.12.0</version>
                 <configuration>
-                    <url>jdbc:h2:~/movie</url>
+                    <url>jdbc:h2:~/movies</url>
                     <user>sa</user>
                     <password></password>
                     <sqlMigrationSeparator>__</sqlMigrationSeparator>
