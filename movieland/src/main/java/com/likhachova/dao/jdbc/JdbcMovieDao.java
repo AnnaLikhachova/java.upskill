@@ -20,6 +20,7 @@ public class JdbcMovieDao implements MovieDao {
     private static final MovieRowMapper MOVIE_ROW_MAPPER = new MovieRowMapper();
     private static final String SELECT_ALL = "SELECT * FROM movie;";
     private static final String SELECT_THREE_RANDOM = "SELECT id, name_russian, name_native, year_of_release, description, rating, price, picture_path, votes FROM movie ORDER BY RAND() limit ?;";
+    private static final String SELECT_MOVIES_BY_GENRE = "SELECT movie.id, name_russian, name_native, year_of_release, description, rating, price, picture_path, votes FROM movie JOIN movie_genre ON movie.id = movie_genre.movie_id JOIN genre ON genre.id = movie_genre.genre_id WHERE genre.id = ?;";
 
 
     public JdbcMovieDao(DataSource dataSource) {
@@ -37,6 +38,12 @@ public class JdbcMovieDao implements MovieDao {
     public List<Movie> findThreeRandom(int limit) {
         logger.debug("Find three random movies from database");
         return jdbcTemplate.query(SELECT_THREE_RANDOM, new MovieRowMapper(), limit);
+    }
+
+    @Override
+    public List<Movie> findByGenre(int genreId) {
+        logger.debug("Find movies by genre from database");
+        return jdbcTemplate.query(SELECT_MOVIES_BY_GENRE, new MovieRowMapper(), genreId);
     }
 
 }

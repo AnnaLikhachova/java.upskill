@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,6 +28,12 @@ public class MovieController {
     public Iterable<Movie> findThreeRandom(){
         logger.debug("Get three random movies from database");
         return  movieService.findThreeRandom(3);
+    }
+
+    @GetMapping(value ="/v1/movie/genre/{genreId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Iterable<Movie> findByGenre(@PathVariable String genreId){
+        logger.debug("Get movies by genre from database");
+        return  movieService.findByGenre(Integer.parseInt(genreId));
     }
 
 }
