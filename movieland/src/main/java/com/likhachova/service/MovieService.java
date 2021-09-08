@@ -23,4 +23,20 @@ public class MovieService {
     public Iterable<Movie> findByGenre(int genreId){
         return movieDao.findByGenre(genreId);
     };
+
+    public Iterable<Movie> sortByPrice(String sortingOrder) {
+        return movieDao.sortByPrice(sortingOrder);
+    }
+
+    public Iterable<Movie> sortByRating(String sortingOrder) {
+        return movieDao.sortByRating(sortingOrder);
+    }
+
+    public Iterable<Movie> findByGenreSortByPrice(int genreId, String sortingOrder) {
+        return movieDao.findByGenreSortByPrice(genreId, sortingOrder);
+    }
+
+    public Iterable<Movie> findByGenreSortByRating(int parseInt, String sortingOrder) {
+        return movieDao.findByGenreSortByRating(parseInt, sortingOrder);
+    }
 }
