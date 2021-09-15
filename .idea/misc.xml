@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/file.manager/pom.xml" />
+        <option value="$PROJECT_DIR$/list.realization/pom.xml" />
+        <option value="$PROJECT_DIR$/map.realization/pom.xml" />
+        <option value="$PROJECT_DIR$/orm.annotations/pom.xml" />
+        <option value="$PROJECT_DIR$/query.executor/pom.xml" />
+        <option value="$PROJECT_DIR$/reflection/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/classes" />
+  </component>
+</project>

@@ -9,14 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>web.server</artifactId>
+    <artifactId>streams.io</artifactId>
+
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
