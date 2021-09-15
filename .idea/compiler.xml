@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="online.shop" />
+        <module name="report.generator" />
+        <module name="serialization" />
+        <module name="serversocket" />
+        <module name="streams.io" />
+        <module name="webserver" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="online.shop" target="1.8" />
+      <module name="query.executor" target="1.8" />
+      <module name="report.generator" target="1.8" />
+      <module name="serialization" target="1.8" />
+      <module name="serversocket" target="1.8" />
+      <module name="streams.io" target="1.8" />
+      <module name="upskilling.java" target="1.8" />
+      <module name="webserver" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="filemanager" options="-parameters" />
+      <module name="list.realization" options="-parameters" />
+      <module name="map.realization" options="-parameters" />
+      <module name="orm" options="-parameters" />
+      <module name="orm.annotations" options="-parameters" />
+      <module name="reflection" options="-parameters" />
+      <module name="serialization" options="" />
+      <module name="serversocket" options="" />
+      <module name="streams.io" options="" />
+      <module name="upskilling.firstlesson" options="-parameters" />
+      <module name="webserver" options="" />
+    </option>
+  </component>
+</project>

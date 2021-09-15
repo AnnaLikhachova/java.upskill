@@ -2,6 +2,7 @@ package com.likhachova.web.controller;
 
 import com.likhachova.model.Movie;
 import com.likhachova.service.MovieService;
+import com.likhachova.util.MovieRequester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,10 @@ public class MovieControllerTest {
                 .votes(100)
                 .build();
 
-        when(movieService.findByGenre(1)).thenReturn(new ArrayList<>(16));
+        MovieRequester movieRequester = new MovieRequester.Builder().withGenreId(1).build();
+
+        when(movieService.findByGenre(movieRequester)).thenReturn(new ArrayList<>(16));
+
         mockMvc.perform(get("/v1/movie/genre/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -142,8 +146,10 @@ public class MovieControllerTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
                 .votes(100)
                 .build();
+        MovieRequester movieRequester = new MovieRequester.Builder().withSortingOrder("desc").build();
 
-        when(movieService.sortByRating("desc")).thenReturn(new ArrayList<>(25));
+        when(movieService.sortByRating(movieRequester)).thenReturn(new ArrayList<>(25));
+
         mockMvc.perform(get("/v1/movie/rating=desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -162,22 +168,25 @@ public class MovieControllerTest {
     }
 
     @Test
-    @DisplayName("Sort movies by rating")
-    void test_sortMoviesByPrive() throws Exception {
+    @DisplayName("Sort movies by price")
+    void test_sortMoviesByPrice() throws Exception {
         Movie movie = Movie.builder()
-                .id(1)
-                .nameRussian("Побег из Шоушенка")
-                .nameNative("The Shawshank Redemption")
+                .id(3)
+                .nameRussian("Форрест Гамп")
+                .nameNative("Forrest Gump")
                 .yearOfRelease(LocalDate.parse("1994-01-01", DateTimeFormatter.ofPattern("yyyy-MM-d")))
-                .description("Успешный банкир Энди Дюфрейн обвинен в убийстве собственной жены и ее любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решетки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, вооруженный живым умом и доброй душой, отказывается мириться с приговором судьбы и начинает разрабатывать невероятно дерзкий план своего освобождения.")
-                .rating(8.9)
-                .price(123.45)
-                .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
+                .description("От лица главного героя Форреста Гампа, слабоумного безобидного человека с благородным и открытым сердцем, рассказывается история его необыкновенной жизни.Фантастическим образом превращается он в известного футболиста, героя войны, преуспевающего бизнесмена. Он становится миллиардером, но остается таким же бесхитростным, глупым и добрым. Форреста ждет постоянный успех во всем, а он любит девочку, с которой дружил в детстве, но взаимность приходит слишком поздно.")
+                .rating(8.6)
+                .price(200.6)
+                .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1._SY209_CR2,0,140,209_.jpg")
                 .votes(100)
                 .build();
 
-        when(movieService.sortByRating("desc")).thenReturn(new ArrayList<>(25));
-        mockMvc.perform(get("/v1/movie/rating=desc"))
+        MovieRequester movieRequester = new MovieRequester.Builder().withSortingOrder("desc").build();
+
+        when(movieService.sortByRating(movieRequester)).thenReturn(new ArrayList<>(25));
+
+        mockMvc.perform(get("/v1/movie/price=desc"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$", hasSize(25)))
@@ -190,6 +199,41 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$[0].price", is(movie.getPrice())))
                 .andExpect(jsonPath("$[0].picturePath", is(movie.getPicturePath())))
                 .andExpect(jsonPath("$[0].votes", is(movie.getVotes())));
+
+        verifyNoMoreInteractions(movieService);
+    }
+
+    @Test
+    @DisplayName("Get movie by id and check fields")
+    void getMovieById() throws Exception {
+        Movie movie = Movie.builder()
+                .id(1)
+                .nameRussian("Побег из Шоушенка")
+                .nameNative("The Shawshank Redemption")
+                .yearOfRelease(LocalDate.parse("1994-01-01", DateTimeFormatter.ofPattern("yyyy-MM-d")))
+                .description("Успешный банкир Энди Дюфрейн обвинен в убийстве собственной жены и ее любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решетки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, вооруженный живым умом и доброй душой, отказывается мириться с приговором судьбы и начинает разрабатывать невероятно дерзкий план своего освобождения.")
+                .rating(8.9)
+                .price(123.45)
+                .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
+                .votes(100)
+                .build();
+
+        MovieRequester movieRequester = new MovieRequester.Builder().withMovieId(1).build();
+
+        when(movieService.findById(movieRequester)).thenReturn(movie);
+
+        mockMvc.perform(get("/v1/movie/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.id", is(movie.getId())))
+                .andExpect(jsonPath("$.nameRussian", is(movie.getNameRussian())))
+                .andExpect(jsonPath("$.nameNative", is(movie.getNameNative())))
+                .andExpect(jsonPath("$.yearOfRelease", is("" + movie.getYearOfRelease() + "")))
+                .andExpect(jsonPath("$.description", is(movie.getDescription())))
+                .andExpect(jsonPath("$.rating", is(movie.getRating())))
+                .andExpect(jsonPath("$.price", is(movie.getPrice())))
+                .andExpect(jsonPath("$.picturePath", is(movie.getPicturePath())))
+                .andExpect(jsonPath("$.votes", is(movie.getVotes())));
 
         verifyNoMoreInteractions(movieService);
     }

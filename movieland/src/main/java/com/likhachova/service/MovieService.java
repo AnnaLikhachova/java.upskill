@@ -2,6 +2,7 @@ package com.likhachova.service;
 
 import com.likhachova.dao.MovieDao;
 import com.likhachova.model.Movie;
+import com.likhachova.util.MovieRequester;
 
 public class MovieService {
 
@@ -20,23 +21,27 @@ public class MovieService {
         return movieDao.findThreeRandom(limit);
     }
 
-    public Iterable<Movie> findByGenre(int genreId){
-        return movieDao.findByGenre(genreId);
+    public Iterable<Movie> findByGenre(MovieRequester movieRequester){
+        return movieDao.findByGenre(movieRequester);
     };
 
-    public Iterable<Movie> sortByPrice(String sortingOrder) {
-        return movieDao.sortByPrice(sortingOrder);
+    public Iterable<Movie> sortByPrice(MovieRequester movieRequester) {
+        return movieDao.sortByPrice(movieRequester);
     }
 
-    public Iterable<Movie> sortByRating(String sortingOrder) {
-        return movieDao.sortByRating(sortingOrder);
+    public Iterable<Movie> sortByRating(MovieRequester movieRequester) {
+        return movieDao.sortByRating(movieRequester);
     }
 
-    public Iterable<Movie> findByGenreSortByPrice(int genreId, String sortingOrder) {
-        return movieDao.findByGenreSortByPrice(genreId, sortingOrder);
+    public Iterable<Movie> findByGenreSortByPrice(MovieRequester movieRequester) {
+        return movieDao.findByGenreSortByPrice(movieRequester);
     }
 
-    public Iterable<Movie> findByGenreSortByRating(int parseInt, String sortingOrder) {
-        return movieDao.findByGenreSortByRating(parseInt, sortingOrder);
+    public Iterable<Movie> findByGenreSortByRating(MovieRequester movieRequester) {
+        return movieDao.findByGenreSortByRating(movieRequester);
+    }
+
+    public Movie findById(MovieRequester movieRequester) {
+        return movieDao.findById(movieRequester);
     }
 }

@@ -11,5 +11,13 @@
 
     <artifactId>serialization</artifactId>
 
+    <dependencies>
+        <!-- commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+    </dependencies>
 
 </project>

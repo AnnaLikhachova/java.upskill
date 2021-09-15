@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/onlineshop/online.shop.iml" filepath="$PROJECT_DIR$/onlineshop/online.shop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/report.generator/report.generator.iml" filepath="$PROJECT_DIR$/report.generator/report.generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/serialization/serialization.iml" filepath="$PROJECT_DIR$/serialization/serialization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server.socket/serversocket.iml" filepath="$PROJECT_DIR$/server.socket/serversocket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/streams.io/streams.io.iml" filepath="$PROJECT_DIR$/streams.io/streams.io.iml" />
+      <module fileurl="file://$PROJECT_DIR$/upskilling.java.iml" filepath="$PROJECT_DIR$/upskilling.java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web.server/webserver.iml" filepath="$PROJECT_DIR$/web.server/webserver.iml" />
+    </modules>
+  </component>
+</project>

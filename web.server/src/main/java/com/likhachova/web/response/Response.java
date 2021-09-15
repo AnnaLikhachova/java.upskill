@@ -1,6 +1,5 @@
 package com.likhachova.web.response;
 
-import com.likhachova.web.http.HttpMethod;
 import com.likhachova.web.http.HttpStatus;
 import com.likhachova.web.io.ContentReader;
 import lombok.Getter;

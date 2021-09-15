@@ -2,6 +2,7 @@ package com.likhachova.web.controller;
 
 import com.likhachova.model.Movie;
 import com.likhachova.service.MovieService;
+import com.likhachova.util.MovieRequester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,31 +34,37 @@ public class MovieController {
     @GetMapping(value = "/v1/movie/genre/{genreId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Movie> findByGenre(@PathVariable String genreId) {
         logger.debug("Get movies by genre from database");
-        return movieService.findByGenre(Integer.parseInt(genreId));
+        return movieService.findByGenre(new MovieRequester.Builder().withGenreId(Integer.parseInt(genreId)).build());
     }
 
     @GetMapping(value = "/v1/movie/genre/{genreId}/price={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Movie> sortByPriceOrderByGenre(@PathVariable String genreId, @PathVariable String sortingOrder) {
         logger.debug("Get movies by genre {} and sort them by price {}" + genreId, sortingOrder);
-        return movieService.findByGenreSortByPrice(Integer.parseInt(genreId), sortingOrder);
+        return movieService.findByGenreSortByPrice(new MovieRequester.Builder().withGenreIdAndSortingOrder(Integer.parseInt(genreId), sortingOrder).build());
     }
 
     @GetMapping(value = "/v1/movie/genre/{genreId}/rating={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Movie> sortByRatingOrderByGenre(@PathVariable String genreId, @PathVariable String sortingOrder) {
         logger.debug("Get movies by genre {} and sort them by rating {}" + genreId, sortingOrder);
-        return movieService.findByGenreSortByRating(Integer.parseInt(genreId), sortingOrder);
+        return movieService.findByGenreSortByRating(new MovieRequester.Builder().withGenreIdAndSortingOrder(Integer.parseInt(genreId), sortingOrder).build());
     }
 
-    @GetMapping(value = "/v1/movie?price={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1/movie/price={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Movie> sortAllMoviesByPrice(@PathVariable String sortingOrder) {
         logger.debug("Sort all movies by price {}" + sortingOrder);
-        return movieService.sortByPrice(sortingOrder);
+        return movieService.sortByPrice(new MovieRequester.Builder().withSortingOrder(sortingOrder).build());
     }
 
-    @GetMapping(value = "/v1/movie?rating={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/v1/movie/rating={sortingOrder}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Iterable<Movie> sortAllMoviesByRating(@PathVariable String sortingOrder) {
         logger.debug("Sort all movies by rating {}" + sortingOrder);
-        return movieService.sortByRating(sortingOrder);
+        return movieService.sortByRating(new MovieRequester.Builder().withSortingOrder(sortingOrder).build());
+    }
+
+    @GetMapping(value = "/v1/movie/{movieId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Movie findById(@PathVariable String movieId) {
+        logger.debug("Get movies by id {} from database", movieId);
+        return movieService.findById(new MovieRequester.Builder().withMovieId(Integer.parseInt(movieId)).build());
     }
 
 }

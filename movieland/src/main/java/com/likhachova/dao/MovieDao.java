@@ -1,6 +1,7 @@
 package com.likhachova.dao;
 
 import com.likhachova.model.Movie;
+import com.likhachova.util.MovieRequester;
 
 import java.util.List;
 
@@ -10,13 +11,15 @@ public interface MovieDao {
 
     List<Movie> findThreeRandom(int limit);
 
-    List<Movie> findByGenre(int genreId);
+    List<Movie> findByGenre(MovieRequester movieRequester);
 
-    List<Movie> sortByPrice(String sortingOrder);
+    List<Movie> sortByPrice(MovieRequester movieRequester);
 
-    List<Movie> sortByRating(String sortingOrder);
+    List<Movie> sortByRating(MovieRequester movieRequester);
 
-    List<Movie> findByGenreSortByPrice(int parseInt, String sortingOrder);
+    List<Movie> findByGenreSortByPrice(MovieRequester movieRequester);
 
-    List<Movie> findByGenreSortByRating(int parseInt, String sortingOrder);
+    List<Movie> findByGenreSortByRating(MovieRequester movieRequester);
+
+    Movie findById(MovieRequester movieRequester);
 }

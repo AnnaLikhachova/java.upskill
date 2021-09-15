@@ -13,6 +13,10 @@ public class GenreService {
         this.genreDao = genreDao;
     }
 
+    public void setGenreDao(GenreDao genreDao) {
+        this.genreDao = genreDao;
+    }
+
     @Cacheable(cacheNames = "genres")
     public Iterable<Genre> findAll() {
         return genreDao.findAll();

@@ -1,6 +1,7 @@
 package com.likhachova.dao.jdbc;
 
 import com.likhachova.model.Movie;
+import com.likhachova.util.MovieRequester;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,7 +65,8 @@ public class JdbcMovieDaoTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
                 .votes(100)
                 .build();
-        List<Movie> movies = jdbcMovieDao.findByGenre(1);
+        MovieRequester movieRequester = new MovieRequester.Builder().withGenreId(1).build();
+        List<Movie> movies = jdbcMovieDao.findByGenre(movieRequester);
         assertEquals(movie.getId(), movies.get(0).getId());
         assertEquals(movie.getNameNative(), movies.get(0).getNameNative());
         assertEquals(movie.getNameRussian(), movies.get(0).getNameRussian());
@@ -90,7 +92,8 @@ public class JdbcMovieDaoTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1._SY209_CR2,0,140,209_.jpg")
                 .votes(100)
                 .build();
-        List<Movie> movies = jdbcMovieDao.sortByPrice( "desc");
+        MovieRequester movieRequester = new MovieRequester.Builder().withSortingOrder("desc").build();
+        List<Movie> movies = jdbcMovieDao.sortByPrice( movieRequester);
         assertEquals(movie.getId(), movies.get(0).getId());
         assertEquals(movie.getNameNative(), movies.get(0).getNameNative());
         assertEquals(movie.getNameRussian(), movies.get(0).getNameRussian());
@@ -116,7 +119,8 @@ public class JdbcMovieDaoTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
                 .votes(100)
                 .build();
-        List<Movie> movies = jdbcMovieDao.sortByRating( "desc");
+        MovieRequester movieRequester = new MovieRequester.Builder().withSortingOrder("desc").build();
+        List<Movie> movies = jdbcMovieDao.sortByRating( movieRequester);
         assertEquals(movie.getId(), movies.get(0).getId());
         assertEquals(movie.getNameNative(), movies.get(0).getNameNative());
         assertEquals(movie.getNameRussian(), movies.get(0).getNameRussian());
@@ -142,7 +146,8 @@ public class JdbcMovieDaoTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
                 .votes(100)
                 .build();
-        List<Movie> movies = jdbcMovieDao.findByGenreSortByRating(1, "desc");
+        MovieRequester movieRequester = new MovieRequester.Builder().withGenreIdAndSortingOrder(1, "desc").build();
+        List<Movie> movies = jdbcMovieDao.findByGenreSortByRating(movieRequester);
         assertEquals(movie.getId(), movies.get(0).getId());
         assertEquals(movie.getNameNative(), movies.get(0).getNameNative());
         assertEquals(movie.getNameRussian(), movies.get(0).getNameRussian());
@@ -168,7 +173,8 @@ public class JdbcMovieDaoTest {
                 .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1._SY209_CR2,0,140,209_.jpg")
                 .votes(100)
                 .build();
-        List<Movie> movies = jdbcMovieDao.findByGenreSortByPrice(1, "desc");
+        MovieRequester movieRequester = new MovieRequester.Builder().withGenreIdAndSortingOrder(1, "desc").build();
+        List<Movie> movies = jdbcMovieDao.findByGenreSortByPrice(movieRequester);
         assertEquals(movie.getId(), movies.get(0).getId());
         assertEquals(movie.getNameNative(), movies.get(0).getNameNative());
         assertEquals(movie.getNameRussian(), movies.get(0).getNameRussian());
@@ -180,4 +186,30 @@ public class JdbcMovieDaoTest {
         assertEquals(movie.getRating(), movies.get(0).getRating());
     }
 
+    @Test
+    @DisplayName("Get movie by id")
+    public void whenMockJdbcMovieDao_thenReturnMovieById() {
+        Movie movieExpected = Movie.builder()
+                .id(1)
+                .nameRussian("Побег из Шоушенка")
+                .nameNative("The Shawshank Redemption")
+                .yearOfRelease(LocalDate.parse("1994-01-01", DateTimeFormatter.ofPattern("yyyy-MM-d")))
+                .description("Успешный банкир Энди Дюфрейн обвинен в убийстве собственной жены и ее любовника. Оказавшись в тюрьме под названием Шоушенк, он сталкивается с жестокостью и беззаконием, царящими по обе стороны решетки. Каждый, кто попадает в эти стены, становится их рабом до конца жизни. Но Энди, вооруженный живым умом и доброй душой, отказывается мириться с приговором судьбы и начинает разрабатывать невероятно дерзкий план своего освобождения.")
+                .rating(8.9)
+                .price(123.45)
+                .picturePath("https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1._SY209_CR0,0,140,209_.jpg")
+                .votes(100)
+                .build();
+        MovieRequester movieRequester = new MovieRequester.Builder().withMovieId(1).build();
+        Movie movie = jdbcMovieDao.findById(movieRequester);
+        assertEquals(movieExpected.getId(), movie.getId());
+        assertEquals(movieExpected.getNameNative(), movie.getNameNative());
+        assertEquals(movieExpected.getNameRussian(), movie.getNameRussian());
+        assertEquals(movieExpected.getDescription(), movie.getDescription());
+        assertEquals(movieExpected.getPrice(), movie.getPrice());
+        assertEquals(movieExpected.getVotes(), movie.getVotes());
+        assertEquals(movieExpected.getYearOfRelease(), movie.getYearOfRelease());
+        assertEquals(movieExpected.getPicturePath(), movie.getPicturePath());
+        assertEquals(movieExpected.getRating(), movie.getRating());
+    }
 }

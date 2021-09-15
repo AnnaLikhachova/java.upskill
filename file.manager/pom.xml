@@ -11,6 +11,15 @@
 
     <artifactId>file.manager</artifactId>
 
+    <dependencies>
+        <!-- commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>fileanalyzer</finalName>
     </build>
