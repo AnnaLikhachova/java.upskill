@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/dispatcher-servlet.xml")
+@ContextConfiguration("file:/src/main/webapp/WEB-INF/dispatcher-servlet.xml")
 public class GenreControllerTest {
 
     private MockMvc mockMvc;
